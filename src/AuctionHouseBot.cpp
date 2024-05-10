@@ -106,6 +106,7 @@ AuctionHouseBot::AuctionHouseBot()
     DisableTGsBelowReqSkillRank = 0;
     DisableTGsAboveReqSkillRank = 0;
 
+    DisableEquipsBelowQuality = 0;
     //End Filters
 
     _lastrun_a = time(NULL);
@@ -1263,6 +1264,13 @@ void AuctionHouseBot::Initialize()
                 continue;
             }
 
+            if (DisableEquipsBelowQuality>0 
+                && (itr->second.Class == ITEM_CLASS_WEAPON || itr->second.Class == ITEM_CLASS_ARMOR)
+                && itr->second.Quality<DisableEquipsBelowQuality )
+            {
+                continue;
+            }
+
             switch (itr->second.Quality)
             {
             case AHB_GREY:
@@ -1423,6 +1431,8 @@ void AuctionHouseBot::InitializeConfiguration()
     DisableItemsAboveReqSkillRank = sConfigMgr->GetOption<uint32>("AuctionHouseBot.DisableItemsAboveReqSkillRank", 0);
     DisableTGsBelowReqSkillRank = sConfigMgr->GetOption<uint32>("AuctionHouseBot.DisableTGsBelowReqSkillRank", 0);
     DisableTGsAboveReqSkillRank = sConfigMgr->GetOption<uint32>("AuctionHouseBot.DisableTGsAboveReqSkillRank", 0);
+
+    DisableEquipsBelowQuality = sConfigMgr->GetOption<uint32>("AuctionHouseBot.DisableEquipsBelowQuality", 0);
 }
 
 void AuctionHouseBot::IncrementItemCounts(AuctionEntry* ah)

@@ -1234,6 +1234,8 @@ private:
     uint32 DisableTGsBelowReqSkillRank;
     uint32 DisableTGsAboveReqSkillRank;
 
+    uint32 DisableEquipsBelowQuality;
+
     std::set<uint32> DisableItemStore;
 
     //End Filters
