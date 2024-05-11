@@ -45,6 +45,8 @@ vector<uint32> purpleItemsBin;
 vector<uint32> orangeItemsBin;
 vector<uint32> yellowItemsBin;
 
+vector<uint32> glyphItemsBin;
+
 AuctionHouseBot::AuctionHouseBot()
 {
     debug_Out = false;
@@ -70,6 +72,7 @@ AuctionHouseBot::AuctionHouseBot()
     DisablePermEnchant = false;
     DisableConjured = false;
     DisableGems = false;
+    DisableGlyphs = false;
     DisableMoney = false;
     DisableMoneyLoot = false;
     DisableLootable = false;
@@ -215,6 +218,8 @@ void AuctionHouseBot::addNewAuctions(Player *AHBplayer, AHBConfig *config)
     uint32 orangeItems = config->GetItemCounts(AHB_ORANGE_I);
     uint32 yellowItems = config->GetItemCounts(AHB_YELLOW_I);
 
+    uint32 glyphItems = config->GetGlyphCount();
+
     if (debug_Out)
         LOG_ERROR("module", "AHSeller: {} items", items);
 
@@ -230,6 +235,7 @@ void AuctionHouseBot::addNewAuctions(Player *AHBplayer, AHBConfig *config)
         while (itemID == 0 && loopbreaker <= 50)
         {
             ++loopbreaker;
+
             uint32 choice = urand(0, 13);
             itemColor = choice;
             switch (choice)
@@ -340,6 +346,11 @@ void AuctionHouseBot::addNewAuctions(Player *AHBplayer, AHBConfig *config)
                 }
             }
 
+            if (glyphItems < 200 && glyphItemsBin.size() > 0){
+                itemID = glyphItemsBin[urand(0, glyphItemsBin.size() - 1)];
+                itemColor = 99;
+            }
+
             if (itemID == 0)
             {
                 if (debug_Out)
@@ -377,7 +388,12 @@ void AuctionHouseBot::addNewAuctions(Player *AHBplayer, AHBConfig *config)
             else
                 buyoutPrice = prototype->SellPrice;
 
-            if (prototype->Quality <= AHB_MAX_QUALITY)
+            if (prototype->Class == ITEM_CLASS_GLYPH){
+                stackCount = 1;
+                buyoutPrice = prototype->BuyPrice * 110;
+                bidPrice = prototype->BuyPrice * 100;
+            }
+            else if (prototype->Quality <= AHB_MAX_QUALITY)
             {
                 if (config->GetMaxStack(prototype->Quality) > 1 && item->GetMaxStackCount() > 1)
                     stackCount = urand(1, minValue(item->GetMaxStackCount(), config->GetMaxStack(prototype->Quality)));
@@ -439,6 +455,11 @@ void AuctionHouseBot::addNewAuctions(Player *AHBplayer, AHBConfig *config)
             auctionHouse->AddAuction(auctionEntry);
             auctionEntry->SaveToDB(trans);
             CharacterDatabase.CommitTransaction(trans);
+
+            if (prototype->Class == ITEM_CLASS_GLYPH){
+                glyphItems++;
+                continue;
+            }
 
             switch(itemColor)
             {
@@ -831,6 +852,7 @@ void AuctionHouseBot::Initialize()
         }
 
         ItemTemplateContainer const* its = sObjectMgr->GetItemTemplateStore();
+        LOG_INFO("module", "GetItemTemplateStore: {}", its->size());
         for (ItemTemplateContainer::const_iterator itr = its->begin(); itr != its->end(); ++itr)
         {
             switch (itr->second.Bonding)
@@ -930,7 +952,9 @@ void AuctionHouseBot::Initialize()
                     continue;
             }
 
-            if ((Other_Items == 0) && !(itr->second.Class == ITEM_CLASS_TRADE_GOODS))
+            if ((Other_Items == 0) 
+                && (itr->second.Class != ITEM_CLASS_TRADE_GOODS)
+                && (itr->second.Class != ITEM_CLASS_GLYPH))
             {
                 bool isVendorItem = false;
                 bool isLootItem = false;
@@ -973,6 +997,15 @@ void AuctionHouseBot::Initialize()
             {
                 if (debug_Out_Filters)
                     LOG_ERROR("module", "AuctionHouseBot: Item {} disabled (PTR/Beta/Unused Item)", itr->second.ItemId);
+                continue;
+            }
+
+            if (itr->second.Class == ITEM_CLASS_GLYPH)
+            {
+                if (DisableGlyphs) continue;
+                // Filter out glyphs of deprecated or used by npcs.
+                if (itr->second.Quality != AHB_WHITE || itr->second.BuyPrice == 0) continue;
+                glyphItemsBin.push_back(itr->second.ItemId);
                 continue;
             }
 
@@ -1264,9 +1297,9 @@ void AuctionHouseBot::Initialize()
                 continue;
             }
 
-            if (DisableEquipsBelowQuality>0 
+            if (DisableEquipsBelowQuality > 0 
                 && (itr->second.Class == ITEM_CLASS_WEAPON || itr->second.Class == ITEM_CLASS_ARMOR)
-                && itr->second.Quality<DisableEquipsBelowQuality )
+                && itr->second.Quality < DisableEquipsBelowQuality )
             {
                 continue;
             }
@@ -1359,6 +1392,7 @@ void AuctionHouseBot::Initialize()
         LOG_INFO("module", "loaded {} purple items", uint32(purpleItemsBin.size()));
         LOG_INFO("module", "loaded {} orange items", uint32(orangeItemsBin.size()));
         LOG_INFO("module", "loaded {} yellow items", uint32(yellowItemsBin.size()));
+        LOG_INFO("module", "loaded {} glyph items", uint32(glyphItemsBin.size()));
     }
 
     LOG_INFO("module", "AuctionHouseBot and AuctionHouseBuyer have been loaded.");
@@ -1396,6 +1430,7 @@ void AuctionHouseBot::InitializeConfiguration()
     DisablePermEnchant = sConfigMgr->GetOption<bool>("AuctionHouseBot.DisablePermEnchant", false);
     DisableConjured = sConfigMgr->GetOption<bool>("AuctionHouseBot.DisableConjured", false);
     DisableGems = sConfigMgr->GetOption<bool>("AuctionHouseBot.DisableGems", false);
+    DisableGlyphs = sConfigMgr->GetOption<bool>("AuctionHouseBot.DisableGlyphs", false);
     DisableMoney = sConfigMgr->GetOption<bool>("AuctionHouseBot.DisableMoney", false);
     DisableMoneyLoot = sConfigMgr->GetOption<bool>("AuctionHouseBot.DisableMoneyLoot", false);
     DisableLootable = sConfigMgr->GetOption<bool>("AuctionHouseBot.DisableLootable", false);
@@ -1854,6 +1889,11 @@ void AuctionHouseBot::LoadValues(AHBConfig *config)
                     ItemTemplate const *prototype = item->GetTemplate();
                     if (prototype)
                     {
+                        if (prototype->Class == ITEM_CLASS_GLYPH){
+                            config->AddGlyphCount(1);
+                            continue;
+                        }
+
                         switch (prototype->Quality)
                         {
                         case 0:

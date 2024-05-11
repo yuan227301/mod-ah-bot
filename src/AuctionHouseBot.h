@@ -166,6 +166,8 @@ private:
     uint32 orangeItems;
     uint32 yellowItems;
 
+    uint32 glyphCount;
+
 public:
     AHBConfig(uint32 ahid)
     {
@@ -938,6 +940,9 @@ public:
     {
         switch(Class)
         {
+        case ITEM_CLASS_GLYPH:
+            DecGlyphCount(1);
+            break;
         case ITEM_CLASS_TRADE_GOODS:
             DecItemCounts(Quality);
             break;
@@ -1002,6 +1007,9 @@ public:
     {
         switch(Class)
         {
+        case ITEM_CLASS_GLYPH:
+            AddGlyphCount(1);
+            break;
         case ITEM_CLASS_TRADE_GOODS:
             IncItemCounts(Quality);
             break;
@@ -1079,6 +1087,8 @@ public:
         purpleItems = 0;
         orangeItems = 0;
         yellowItems = 0;
+
+        glyphCount = 0;
     }
 
     uint32 TotalItemCounts()
@@ -1160,6 +1170,24 @@ public:
     {
         return buyerBidsPerInterval;
     }
+
+    uint32 GetGlyphCount()
+    {
+        return glyphCount;
+    }
+    void SetGlyphCount(uint32 value)
+    {
+        glyphCount = value;
+    }
+    void AddGlyphCount(uint32 value)
+    {
+        glyphCount += value;
+    }
+    void DecGlyphCount(uint32 value)
+    {
+        glyphCount -= value;
+    }
+
     ~AHBConfig()
     {
     }
@@ -1198,6 +1226,7 @@ private:
     bool DisablePermEnchant;
     bool DisableConjured;
     bool DisableGems;
+    bool DisableGlyphs;
     bool DisableMoney;
     bool DisableMoneyLoot;
     bool DisableLootable;
