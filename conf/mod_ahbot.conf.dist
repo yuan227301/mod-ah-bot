@@ -99,10 +99,6 @@ AuctionHouseBot.ItemsPerCycle = 200
 #        Disable Conjured Items
 #    Default 0 (False)
 #
-#    AuctionHouseBot.DisableGems
-#        Disable Gems
-#    Default 0 (False)
-#
 #    AuctionHouseBot.DisableMoney
 #        Disable Items that are used as money
 #    Default 0 (False)
@@ -145,8 +141,6 @@ AuctionHouseBot.Bind_When_Use = 1
 AuctionHouseBot.Bind_Quest_Item = 0
 AuctionHouseBot.DisablePermEnchant = 0
 AuctionHouseBot.DisableConjured = 0
-AuctionHouseBot.DisableGems = 0
-AuctionHouseBot.DisableGlyphs = 0
 AuctionHouseBot.DisableMoney = 0
 AuctionHouseBot.DisableMoneyLoot = 0
 AuctionHouseBot.DisableLootable = 0
@@ -265,4 +259,43 @@ AuctionHouseBot.DisableItemsBelowReqSkillRank = 0
 AuctionHouseBot.DisableItemsAboveReqSkillRank = 0
 AuctionHouseBot.DisableTGsBelowReqSkillRank = 0
 AuctionHouseBot.DisableTGsAboveReqSkillRank = 0
-AuctionHouseBot.DisableEquipsBelowQuality = 1
+
+###############################################################################
+# AUCTION HOUSE BOT FILTERS PART 5
+#
+#    AuctionHouseBot.DisableEquipsBelowQuality
+#        Prevent Seller from listing Weapon/Armor below this Quality
+#    Default 2 (Green)
+#
+##########
+AuctionHouseBot.DisableEquipsBelowQuality = 2
+
+###############################################################################
+# AUCTION HOUSE BOT FILTERS PART 4
+#
+#    AuctionHouseBot.Enchantments.Count
+#        The number of enchantments that will be listed
+#    Default 100 
+#
+#    AuctionHouseBot.Gem.Count
+#        The number of gems that will be listed
+#    Default 100 
+#
+#    AuctionHouseBot.Glyph.Count
+#        The number of glyphs that will be listed
+#    Default 100 
+#
+#    AuctionHouseBot.Weapon.Count
+#        The number of weapons that will be listed
+#    Default 100 
+#
+#    AuctionHouseBot.Armor.Count
+#        The number of armor that will be listed
+#    Default 100 
+#
+##########
+AuctionHouseBot.Enchantments.Count = 100
+AuctionHouseBot.Gem.Count = 100
+AuctionHouseBot.Glyph.Count = 100
+AuctionHouseBot.Weapon.Count = 100
+AuctionHouseBot.Armor.Count = 100

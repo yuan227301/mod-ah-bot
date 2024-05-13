@@ -22,6 +22,7 @@
 
 #include "Common.h"
 #include "ObjectGuid.h"
+#include <map>
 
 struct AuctionEntry;
 class Player;
@@ -67,6 +68,14 @@ enum class AHBotCommand : uint32
 #define AHB_PURPLE_I    11
 #define AHB_ORANGE_I    12
 #define AHB_YELLOW_I    13
+
+#define INDEX_GEM           (ITEM_CLASS_GEM<<16)+0
+#define INDEX_GLYPH         (ITEM_CLASS_GLYPH<<16)+0
+#define INDEX_ENCHANTMENT   (ITEM_CLASS_CONSUMABLE<<16) + ITEM_SUBCLASS_ITEM_ENHANCEMENT
+#define INDEX_WEAPON        (ITEM_CLASS_WEAPON<<16)+0
+#define INDEX_ARMOR         (ITEM_CLASS_ARMOR<<16)+0
+
+#define GET_INDEX(x,y)      ((x<<16)+y)
 
 class AHBConfig
 {
@@ -166,31 +175,11 @@ private:
     uint32 orangeItems;
     uint32 yellowItems;
 
-    uint32 glyphCount;
+    std::map<uint32, uint32> m_mItemCounts;
 
 public:
-    AHBConfig(uint32 ahid)
-    {
-        AHID = ahid;
-        switch(ahid)
-        {
-        case 2:
-            AHFID = 55;
-            break;
-        case 6:
-            AHFID = 29;
-            break;
-        case 7:
-            AHFID = 120;
-            break;
-        default:
-            AHFID = 120;
-            break;
-        }
-    }
-    AHBConfig()
-    {
-    }
+    AHBConfig(uint32 ahid);
+
     uint32 GetAHID()
     {
         return AHID;
@@ -936,21 +925,7 @@ public:
         }
     }
 
-    void DecItemCounts(uint32 Class, uint32 Quality)
-    {
-        switch(Class)
-        {
-        case ITEM_CLASS_GLYPH:
-            DecGlyphCount(1);
-            break;
-        case ITEM_CLASS_TRADE_GOODS:
-            DecItemCounts(Quality);
-            break;
-        default:
-            DecItemCounts(Quality + 7);
-            break;
-        }
-    }
+    void DecItemCounts(uint32 Class, uint32 subClass, uint32 Quality);
 
     void DecItemCounts(uint32 color)
     {
@@ -1003,13 +978,12 @@ public:
         }
     }
 
-    void IncItemCounts(uint32 Class, uint32 Quality)
+    void IncItemCounts(uint32 Class, uint32 subClass, uint32 Quality)
     {
+        if (AddItemCountsMap(Class, subClass)) return;
+
         switch(Class)
         {
-        case ITEM_CLASS_GLYPH:
-            AddGlyphCount(1);
-            break;
         case ITEM_CLASS_TRADE_GOODS:
             IncItemCounts(Quality);
             break;
@@ -1087,8 +1061,6 @@ public:
         purpleItems = 0;
         orangeItems = 0;
         yellowItems = 0;
-
-        glyphCount = 0;
     }
 
     uint32 TotalItemCounts()
@@ -1171,22 +1143,8 @@ public:
         return buyerBidsPerInterval;
     }
 
-    uint32 GetGlyphCount()
-    {
-        return glyphCount;
-    }
-    void SetGlyphCount(uint32 value)
-    {
-        glyphCount = value;
-    }
-    void AddGlyphCount(uint32 value)
-    {
-        glyphCount += value;
-    }
-    void DecGlyphCount(uint32 value)
-    {
-        glyphCount -= value;
-    }
+    std::map<uint32, uint32> GetItemCountsMap(){ return m_mItemCounts; }
+    bool AddItemCountsMap(uint32 Class, uint32 subClass);
 
     ~AHBConfig()
     {
@@ -1225,8 +1183,6 @@ private:
 
     bool DisablePermEnchant;
     bool DisableConjured;
-    bool DisableGems;
-    bool DisableGlyphs;
     bool DisableMoney;
     bool DisableMoneyLoot;
     bool DisableLootable;
@@ -1264,6 +1220,8 @@ private:
     uint32 DisableTGsAboveReqSkillRank;
 
     uint32 DisableEquipsBelowQuality;
+
+    std::map<uint32, uint32> m_mItemMaxCounts;
 
     std::set<uint32> DisableItemStore;
 
