@@ -594,7 +594,6 @@ void AuctionHouseBot::Initialize()
             if (it != g_configs.end()){
 
                 if (it->second.Count == 0) continue;
-                m_nConfigCounts += it->second.Count;
                 
                 if (itr->second.Quality < it->second.QualityMin || it->second.QualityMax < itr->second.Quality)
                     continue;
@@ -675,16 +674,34 @@ void AuctionHouseBot::Initialize()
 
         }
 
+        // Filter out configs with no items.
+        for (auto itr = g_configs.begin(); itr != g_configs.end();)
+        {
+            if (g_mapCategoryItems.find(itr->first) == g_mapCategoryItems.end())
+            {
+                LOG_WARN("module.mod-ah-bot", "AHBot: Config class({},{}) has no items, skipping.", GET_CLASS(itr->first), GET_SUBCLASS(itr->first));
+                itr = g_configs.erase(itr);
+            }
+            else
+            {
+                m_nConfigCounts += itr->second.Count;
+                itr++;
+            }
+        }
+
         LOG_INFO("module", "AuctionHouseBot:");
         LOG_INFO("module", "{} disabled items", uint32(DisableItemStore.size()));
 
+        int ItemsCount = 0;
         for (const auto& item : g_mapCategoryItems)
         {   
+            ItemsCount += item.second.size();
             std::string itemName = g_configs[item.first].Name;
             LOG_DEBUG("module", "loaded {} {} items", (uint32)item.second.size(), itemName);
         }
 
-        LOG_INFO("module", "AuctionHouse total {} items", m_nConfigCounts);
+        LOG_INFO("module", "AuctionHouse total items:{}", ItemsCount);
+        LOG_INFO("module", "AuctionHouse total config:{}", m_nConfigCounts);
         
     }
 

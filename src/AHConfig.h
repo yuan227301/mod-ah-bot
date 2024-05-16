@@ -6,6 +6,8 @@
 #include <map>
 
 #define GET_INDEX(x,y)      ((x<<8)+y)
+#define GET_CLASS(x)        (x>>8)
+#define GET_SUBCLASS(x)     (x&0xff)
 
 // #define INDEX_GEM           GET_INDEX(ITEM_CLASS_GEM, 0)
 // #define INDEX_GLYPH         GET_INDEX(ITEM_CLASS_GLYPH, 0) //((ITEM_CLASS_GLYPH<<16)+0)
