@@ -101,15 +101,8 @@ public:
         {
             handler->PSendSysMessage("AHBot commands:");
             handler->PSendSysMessage("ahexpire");
-            handler->PSendSysMessage("minitems");
-            handler->PSendSysMessage("maxitems");
-            //handler->PSendSysMessage("");
-            //handler->PSendSysMessage("");
-            handler->PSendSysMessage("percentages");
             handler->PSendSysMessage("minprice");
             handler->PSendSysMessage("maxprice");
-            handler->PSendSysMessage("minbidprice");
-            handler->PSendSysMessage("maxbidprice");
             handler->PSendSysMessage("maxstack");
             handler->PSendSysMessage("buyerprice");
             handler->PSendSysMessage("bidinterval");
@@ -126,112 +119,6 @@ public:
             }
 
             auctionbot->Commands(AHBotCommand::ahexpire, ahMapID, 0, NULL);
-        }
-        else if (strncmp(opt, "minitems", l) == 0)
-        {
-            char* param1 = strtok(NULL, " ");
-            if (!ahMapIdStr || !param1)
-            {
-                handler->PSendSysMessage("Syntax is: ahbotoptions minitems $ahMapID (2, 6 or 7) $minItems");
-                return false;
-            }
-
-            auctionbot->Commands(AHBotCommand::minitems, ahMapID, 0, param1);
-        }
-        else if (strncmp(opt, "maxitems", l) == 0)
-        {
-            char* param1 = strtok(NULL, " ");
-            if (!ahMapIdStr || !param1)
-            {
-                handler->PSendSysMessage("Syntax is: ahbotoptions maxitems $ahMapID (2, 6 or 7) $maxItems");
-                return false;
-            }
-
-            auctionbot->Commands(AHBotCommand::maxitems, ahMapID, 0, param1);
-        }
-        else if (strncmp(opt, "percentages", l) == 0)
-        {
-            char* param1 = strtok(NULL, " ");
-            char* param2 = strtok(NULL, " ");
-            char* param3 = strtok(NULL, " ");
-            char* param4 = strtok(NULL, " ");
-            char* param5 = strtok(NULL, " ");
-            char* param6 = strtok(NULL, " ");
-            char* param7 = strtok(NULL, " ");
-            char* param8 = strtok(NULL, " ");
-            char* param9 = strtok(NULL, " ");
-            char* param10 = strtok(NULL, " ");
-            char* param11 = strtok(NULL, " ");
-            char* param12 = strtok(NULL, " ");
-            char* param13 = strtok(NULL, " ");
-            char* param14 = strtok(NULL, " ");
-
-            if (!ahMapIdStr || !param14)
-            {
-                handler->PSendSysMessage("Syntax is: ahbotoptions percentages $ahMapID (2, 6 or 7) $1 $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12 $13 $14");
-                handler->PSendSysMessage("1 GreyTradeGoods 2 WhiteTradeGoods 3 GreenTradeGoods 4 BlueTradeGoods 5 PurpleTradeGoods");
-                handler->PSendSysMessage("6 OrangeTradeGoods 7 YellowTradeGoods 8 GreyItems 9 WhiteItems 10 GreenItems 11 BlueItems");
-                handler->PSendSysMessage("12 PurpleItems 13 OrangeItems 14 YellowItems");
-                handler->PSendSysMessage("The total must add up to 100%%");
-                return false;
-            }
-
-            uint32 greytg = uint32(strtoul(param1, NULL, 0));
-            uint32 whitetg = uint32(strtoul(param2, NULL, 0));
-            uint32 greentg = uint32(strtoul(param3, NULL, 0));
-            uint32 bluetg = uint32(strtoul(param4, NULL, 0));
-            uint32 purpletg = uint32(strtoul(param5, NULL, 0));
-            uint32 orangetg = uint32(strtoul(param6, NULL, 0));
-            uint32 yellowtg = uint32(strtoul(param7, NULL, 0));
-            uint32 greyi = uint32(strtoul(param8, NULL, 0));
-            uint32 whitei = uint32(strtoul(param9, NULL, 0));
-            uint32 greeni = uint32(strtoul(param10, NULL, 0));
-            uint32 bluei = uint32(strtoul(param11, NULL, 0));
-            uint32 purplei = uint32(strtoul(param12, NULL, 0));
-            uint32 orangei = uint32(strtoul(param13, NULL, 0));
-            uint32 yellowi = uint32(strtoul(param14, NULL, 0));
-            uint32 totalPercent = greytg + whitetg + greentg + bluetg + purpletg + orangetg + yellowtg + greyi + whitei + greeni + bluei + purplei + orangei + yellowi;
-
-            if (totalPercent == 0 || totalPercent != 100)
-            {
-                handler->PSendSysMessage("Syntax is: ahbotoptions percentages $ahMapID (2, 6 or 7) $1 $2 $3 $4 $5 $6 $7 $8 $9 $10 $11 $12 $13 $14");
-                handler->PSendSysMessage("1 GreyTradeGoods 2 WhiteTradeGoods 3 GreenTradeGoods 4 BlueTradeGoods 5 PurpleTradeGoods");
-                handler->PSendSysMessage("6 OrangeTradeGoods 7 YellowTradeGoods 8 GreyItems 9 WhiteItems 10 GreenItems 11 BlueItems");
-                handler->PSendSysMessage("12 PurpleItems 13 OrangeItems 14 YellowItems");
-                handler->PSendSysMessage("The total must add up to 100%%");
-                return false;
-            }
-
-            char param[100];
-            param[0] = '\0';
-            strcat(param, param1);
-            strcat(param, " ");
-            strcat(param, param2);
-            strcat(param, " ");
-            strcat(param, param3);
-            strcat(param, " ");
-            strcat(param, param4);
-            strcat(param, " ");
-            strcat(param, param5);
-            strcat(param, " ");
-            strcat(param, param6);
-            strcat(param, " ");
-            strcat(param, param7);
-            strcat(param, " ");
-            strcat(param, param8);
-            strcat(param, " ");
-            strcat(param, param9);
-            strcat(param, " ");
-            strcat(param, param10);
-            strcat(param, " ");
-            strcat(param, param11);
-            strcat(param, " ");
-            strcat(param, param12);
-            strcat(param, " ");
-            strcat(param, param13);
-            strcat(param, " ");
-            strcat(param, param14);
-            auctionbot->Commands(AHBotCommand::percentages, ahMapID, 0, param);
         }
         else if (strncmp(opt, "minprice", l) == 0)
         {
@@ -269,60 +156,6 @@ public:
             else
             {
                 handler->PSendSysMessage("Syntax is: ahbotoptions maxprice $ahMapID (2, 6 or 7) $color (grey, white, green, blue, purple, orange or yellow) $price");
-                return false;
-            }
-        }
-        else if (strncmp(opt, "minbidprice", l) == 0)
-        {
-            char* param1 = strtok(NULL, " ");
-            char* param2 = strtok(NULL, " ");
-
-            if (!ahMapIdStr || !param2 || !param2)
-            {
-                handler->PSendSysMessage("Syntax is: ahbotoptions minbidprice $ahMapID (2, 6 or 7) $color (grey, white, green, blue, purple, orange or yellow) $price");
-                return false;
-            }
-
-            uint32 minBidPrice = uint32(strtoul(param2, NULL, 0));
-            if (minBidPrice < 1 || minBidPrice > 100)
-            {
-                handler->PSendSysMessage("The min bid price multiplier must be between 1 and 100");
-                return false;
-            }
-
-            auto quality = qualityStringToEnum(param1, l);
-            if (quality != static_cast<ItemQualities>(-1))
-                auctionbot->Commands(AHBotCommand::minbidprice, ahMapID, quality, param2);
-            else
-            {
-                handler->PSendSysMessage("Syntax is: ahbotoptions minbidprice $ahMapID (2, 6 or 7) $color (grey, white, green, blue, purple, orange or yellow) $price");
-                return false;
-            }
-        }
-        else if (strncmp(opt, "maxbidprice", l) == 0)
-        {
-            char* param1 = strtok(NULL, " ");
-            char* param2 = strtok(NULL, " ");
-
-            if (!ahMapIdStr || !param1 || !param2)
-            {
-                handler->PSendSysMessage("Syntax is: ahbotoptions maxbidprice $ahMapID (2, 6 or 7) $color (grey, white, green, blue, purple, orange or yellow) $price");
-                return false;
-            }
-
-            uint32 maxBidPrice = uint32(strtoul(param2, NULL, 0));
-            if (maxBidPrice < 1 || maxBidPrice > 100)
-            {
-                handler->PSendSysMessage("The max bid price multiplier must be between 1 and 100");
-                return false;
-            }
-
-            auto quality = qualityStringToEnum(param1, l);
-            if (quality != static_cast<ItemQualities>(-1))
-                auctionbot->Commands(AHBotCommand::maxbidprice, ahMapID, quality, param2);
-            else
-            {
-                handler->PSendSysMessage("Syntax is: ahbotoptions max bidprice $ahMapID (2, 6 or 7) $color (grey, white, green, blue, purple, orange or yellow) $price");
                 return false;
             }
         }

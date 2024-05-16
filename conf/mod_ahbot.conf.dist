@@ -51,6 +51,27 @@ AuctionHouseBot.Account = 0
 AuctionHouseBot.GUID = 0
 AuctionHouseBot.ItemsPerCycle = 200
 
+##############################################################################
+#                               Auctions SETTINGS                             #
+##############################################################################
+# AuctionHouseBot.EnableAuctionsAlliance
+#    Is auctioning enabled for Alliance?
+#    0 - disabled
+#    1 - enabled (default)
+# 
+# AuctionHouseBot.EnableAuctionsHorde
+#    Is auctioning enabled for Horde?
+#    0 - disabled
+#    1 - enabled (default)
+#
+# AuctionHouseBot.EnableAuctionsNeutral
+#    Is auctioning enabled for Neutral?
+#    0 - disabled (default)
+#    1 - enabled 
+##############################################################################
+AuctionHouseBot.EnableAuctionsAlliance = 1
+AuctionHouseBot.EnableAuctionsHorde = 1
+AuctionHouseBot.EnableAuctionsNeutral = 0
 ###############################################################################
 # AUCTION HOUSE BOT FILTERS PART 1
 #
@@ -58,25 +79,9 @@ AuctionHouseBot.ItemsPerCycle = 200
 #        Include items that can be bought from vendors.
 #    Default 0 (False)
 #
-#    AuctionHouseBot.VendorTradeGoods
-#        Include Trade Goods that can be bought from vendors.
-#    Default 0 (False)
-#
 #    AuctionHouseBot.LootItems
 #        Include items that can be looted or fished for.
 #    Default 1 (True)
-#
-#    AuctionHouseBot.LootTradeGoods
-#        Include Trade Goods that can be looted or fished for.
-#    Default 1 (True)
-#
-#    AuctionHouseBot.OtherItems
-#        Include misc. items.
-#    Default 0 (False)
-#
-#    AuctionHouseBot.OtherTradeGoods
-#        Include misc. Trade Goods.
-#    Default 0 (False)
 #
 #    AuctionHouseBot.Bonding_types
 #        Indicates which bonding types to allow seller to put up for auction
@@ -91,62 +96,27 @@ AuctionHouseBot.ItemsPerCycle = 200
 #            Bind_Quest_Item
 #             Default 0 (False)
 #
-#    AuctionHouseBot.DisablePermEnchant
-#        Disable Items with a Permanent Enchantment
-#    Default 0 (False)
-#
 #    AuctionHouseBot.DisableConjured
 #        Disable Conjured Items
-#    Default 0 (False)
-#
-#    AuctionHouseBot.DisableMoney
-#        Disable Items that are used as money
 #    Default 0 (False)
 #
 #    AuctionHouseBot.DisableMoneyLoot
 #        Disable Items that have Money as a loot
 #    Default 0 (False)
 #
-#    AuctionHouseBot.DisableLootable
-#        Disable Items that have other items as loot
-#    Default 0 (False)
-#
-#    AuctionHouseBot.DisableKeys
-#        Disable Items that are keys
-#    Default 0 (False)
-#
-#    AuctionHouseBot.DisableDuration
-#        Disable Items with a duration
-#    Default 0 (False)
-#
-#    AuctionHouseBot.DisableBOP_Or_Quest_NoReqLevel
-#        Disable items that are BOP or Quest Item
-#        with a Required level that is less than the Item Level
-#        (This prevents a level 10 with a level 60 weapon or armor)
-#        (May need further refinement)
-#    Default 0 (False)
-#
 ###############################################################################
 
 AuctionHouseBot.VendorItems = 0
-AuctionHouseBot.VendorTradeGoods = 0
 AuctionHouseBot.LootItems = 1
-AuctionHouseBot.LootTradeGoods = 1
-AuctionHouseBot.OtherItems = 0
-AuctionHouseBot.OtherTradeGoods = 0
+
 AuctionHouseBot.No_Bind = 1
 AuctionHouseBot.Bind_When_Picked_Up = 0
 AuctionHouseBot.Bind_When_Equipped = 1
 AuctionHouseBot.Bind_When_Use = 1
 AuctionHouseBot.Bind_Quest_Item = 0
-AuctionHouseBot.DisablePermEnchant = 0
-AuctionHouseBot.DisableConjured = 0
-AuctionHouseBot.DisableMoney = 0
+
+AuctionHouseBot.DisableConjured = 1
 AuctionHouseBot.DisableMoneyLoot = 0
-AuctionHouseBot.DisableLootable = 0
-AuctionHouseBot.DisableKeys = 0
-AuctionHouseBot.DisableDuration = 0
-AuctionHouseBot.DisableBOP_Or_Quest_NoReqLevel = 0
 
 ###############################################################################
 # AUCTION HOUSE BOT FILTERS PART 2
@@ -208,39 +178,7 @@ AuctionHouseBot.DisableDruidItems = 0
 #    AuctionHouseBot.DisableTGsAboveGUID
 #        Prevent Seller from listing Trade Goods above this GUID
 #    Default 0 (Off)
-#
-#    AuctionHouseBot.DisableItemsBelowReqLevel
-#        Prevent Seller from listing Items below this Required Level
-#    Default 0 (Off)
-#
-#    AuctionHouseBot.DisableItemsAboveReqLevel
-#        Prevent Seller from listing Items above this Required Level
-#    Default 0 (Off)
-#
-#    AuctionHouseBot.DisableTGsBelowReqLevel
-#        Prevent Seller from listing Trade Goods below this Required Level
-#    Default 0 (Off)
-#
-#    AuctionHouseBot.DisableTGsAboveReqLevel
-#        Prevent Seller from listing Trade Goods above this Required Level
-#    Default 0 (Off)
-#
-#    AuctionHouseBot.DisableItemsBelowReqSkillRank
-#        Prevent Seller from listing Items below this Required Skill Rank
-#    Default 0 (Off)
-#
-#    AuctionHouseBot.DisableItemsAboveReqSkillRank
-#        Prevent Seller from listing Items above this Required Skill Rank
-#    Default 0 (Off)
-#
-#    AuctionHouseBot.DisableTGsBelowReqSkillRank
-#        Prevent Seller from listing Trade Goods below this Required Skill Rank
-#    Default 0 (Off)
-#
-#    AuctionHouseBot.DisableTGsAboveReqSkillRank
-#        Prevent Seller from listing Trade Goods above this Required Skill Rank
-#    Default 0 (Off)
-#
+
 ###############################################################################
 
 AuctionHouseBot.DisableItemsBelowLevel = 0
@@ -251,51 +189,4 @@ AuctionHouseBot.DisableItemsBelowGUID = 0
 AuctionHouseBot.DisableItemsAboveGUID = 0
 AuctionHouseBot.DisableTGsBelowGUID = 0
 AuctionHouseBot.DisableTGsAboveGUID = 0
-AuctionHouseBot.DisableItemsBelowReqLevel = 0
-AuctionHouseBot.DisableItemsAboveReqLevel = 0
-AuctionHouseBot.DisableTGsBelowReqLevel = 0
-AuctionHouseBot.DisableTGsAboveReqLevel = 0
-AuctionHouseBot.DisableItemsBelowReqSkillRank = 0
-AuctionHouseBot.DisableItemsAboveReqSkillRank = 0
-AuctionHouseBot.DisableTGsBelowReqSkillRank = 0
-AuctionHouseBot.DisableTGsAboveReqSkillRank = 0
 
-###############################################################################
-# AUCTION HOUSE BOT FILTERS PART 5
-#
-#    AuctionHouseBot.DisableEquipsBelowQuality
-#        Prevent Seller from listing Weapon/Armor below this Quality
-#    Default 2 (Green)
-#
-##########
-AuctionHouseBot.DisableEquipsBelowQuality = 2
-
-###############################################################################
-# AUCTION HOUSE BOT FILTERS PART 4
-#
-#    AuctionHouseBot.Enchantments.Count
-#        The number of enchantments that will be listed
-#    Default 100 
-#
-#    AuctionHouseBot.Gem.Count
-#        The number of gems that will be listed
-#    Default 100 
-#
-#    AuctionHouseBot.Glyph.Count
-#        The number of glyphs that will be listed
-#    Default 100 
-#
-#    AuctionHouseBot.Weapon.Count
-#        The number of weapons that will be listed
-#    Default 100 
-#
-#    AuctionHouseBot.Armor.Count
-#        The number of armor that will be listed
-#    Default 100 
-#
-##########
-AuctionHouseBot.Enchantments.Count = 100
-AuctionHouseBot.Gem.Count = 100
-AuctionHouseBot.Glyph.Count = 100
-AuctionHouseBot.Weapon.Count = 100
-AuctionHouseBot.Armor.Count = 100

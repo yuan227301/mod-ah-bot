@@ -1,82 +1,149 @@
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for mod_ah_config_category
+-- ----------------------------
+DROP TABLE IF EXISTS `mod_ah_config_category`;
+CREATE TABLE `mod_ah_config_category`  (
+  `Class` tinyint UNSIGNED NOT NULL,
+  `SubClass` tinyint NOT NULL,
+  `Name` varchar(63) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Count` int NOT NULL DEFAULT 0,
+  `QualityMin` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  `QualityMax` tinyint NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Class`, `SubClass`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of mod_ah_config_category
+-- ----------------------------
+INSERT INTO `mod_ah_config_category` 
+VALUES 
+(0, 3,  'flask', 3, 1, 1),
+(0, 6,  'Enchant', 10, 1, 4),
+
+(1, 0,  'bag', 3, 1, 3),
+
+(2, 0,  'axe', 3, 2, 4),
+(2, 1,  'axe2', 3, 2, 4),
+(2, 2,  'bow', 3, 2, 4),
+(2, 3,  'gun', 3, 2, 4),
+(2, 4,  'mace', 3, 2, 4),
+(2, 5,  'mace2', 3, 2, 4),
+(2, 6,  'polearm', 3, 2, 4),
+(2, 7,  'sword', 3, 2, 4),
+(2, 8,  'sword2', 3, 2, 4),
+(2, 9,  'obsolete', 3, 2, 4),
+(2, 10, 'staff', 3, 2, 4),
+(2, 11, 'exotic', 3, 2, 4),
+(2, 12, 'exotic2', 3, 2, 4),
+(2, 13, 'fist', 3, 2, 4),
+(2, 14, 'misc', 3, 2, 4),
+(2, 15, 'dagger', 3, 2, 4),
+(2, 16, 'thrown', 3, 2, 4),
+(2, 17, 'spear', 3, 2, 4),
+(2, 18, 'crossbow', 3, 2, 4),
+(2, 19, 'wand', 3, 2, 4),
+
+(3, 0,  'gems red', 3, 1, 4),
+(3, 1,  'gems blue', 3, 1, 4),
+(3, 2,  'gems yellow', 3, 1, 4),
+(3, 3,  'gems purple', 3, 1, 4),
+(3, 4,  'gems green', 3, 1, 4),
+(3, 5,  'gems orange', 3, 1, 4),
+(3, 6,  'gems meta', 3, 1, 4),
+(3, 7,  'gems simple', 3, 1, 4),
+(3, 8,  'gems prismatic', 1, 1, 4),
+
+(4, 0,  'misc', 3, 2, 4),
+(4, 1,  'cloth', 3, 2, 4),
+(4, 2,  'leather', 3, 2, 4),
+(4, 3,  'mail', 3, 2, 4),
+(4, 4,  'plate', 3, 2, 4),
+(4, 5,  'buckler', 3, 2, 4),
+(4, 6,  'shield', 3, 2, 4),
+(4, 7,  'libram', 3, 2, 4),
+(4, 8,  'idol', 3, 2, 4),
+(4, 9,  'totem', 3, 2, 4),
+(4, 10, 'sigil', 3, 2, 4),
+
+(7, 0,  'goods', 10, 1, 3),
+(7, 1,  'parts', 10, 1, 3),
+(7, 2,  'explosives', 10, 1, 3),
+(7, 3,  'devices', 10, 1, 3),
+(7, 4,  'jewelcrafting', 10, 1, 3),
+(7, 5,  'cloth', 10, 1, 3),
+(7, 6,  'leather', 10, 1, 3),
+(7, 7,  'metal stone', 10, 1, 3),
+(7, 8,  'meat', 2, 1, 3),
+(7, 9,  'herb', 10, 1, 3),
+(7, 10, 'elements', 10, 1, 3),
+(7, 11, 'goods other', 10, 1, 3),
+(7, 12, 'enchanting', 10, 1, 3),
+(7, 13, 'material', 10, 1, 3),
+(7, 14, 'armor enchantment', 10, 1, 3),
+(7, 15, 'weapon enchantment', 10, 1, 3),
+
+(16, 1,  'glyph of warrior', 5, 1, 1),
+(16, 2,  'glyph of paladin', 5, 1, 1),
+(16, 3,  'glyph of hunter', 5, 1, 1),
+(16, 4,  'glyph of rogue', 5, 1, 1),
+(16, 5,  'glyph of priest', 5, 1, 1),
+(16, 6,  'glyph of death knight', 5, 1, 1),
+(16, 7,  'glyph of shaman', 5, 1, 1),
+(16, 8,  'glyph of mage', 5, 1, 1),
+(16, 9,  'glyph of warlock', 5, 1, 1),
+(16, 11, 'glyph of druid', 5, 1, 1);
+
+-- ----------------------------
+-- Table structure for mod_auctionhousebot
+-- ----------------------------
 DROP TABLE IF EXISTS `mod_auctionhousebot`;
-CREATE TABLE `mod_auctionhousebot` (
-  `auctionhouse` int(11) NOT NULL DEFAULT '0' COMMENT 'mapID of the auctionhouse.',
-  `name` char(25) DEFAULT NULL COMMENT 'Text name of the auctionhouse.',
-  `minitems` int(11) DEFAULT '0' COMMENT 'This is the minimum number of items you want to keep in the auction house. a 0 here will make it the same as the maximum.',
-  `maxitems` int(11) DEFAULT '0' COMMENT 'This is the number of items you want to keep in the auction house.',
-  `percentgreytradegoods` int(11) DEFAULT '0' COMMENT 'Sets the percentage of the Grey Trade Goods auction items',
-  `percentwhitetradegoods` int(11) DEFAULT '27' COMMENT 'Sets the percentage of the White Trade Goods auction items',
-  `percentgreentradegoods` int(11) DEFAULT '12' COMMENT 'Sets the percentage of the Green Trade Goods auction items',
-  `percentbluetradegoods` int(11) DEFAULT '10' COMMENT 'Sets the percentage of the Blue Trade Goods auction items',
-  `percentpurpletradegoods` int(11) DEFAULT '1' COMMENT 'Sets the percentage of the Purple Trade Goods auction items',
-  `percentorangetradegoods` int(11) DEFAULT '0' COMMENT 'Sets the percentage of the Orange Trade Goods auction items',
-  `percentyellowtradegoods` int(11) DEFAULT '0' COMMENT 'Sets the percentage of the Yellow Trade Goods auction items',
-  `percentgreyitems` int(11) DEFAULT '0' COMMENT 'Sets the percentage of the non trade Grey auction items',
-  `percentwhiteitems` int(11) DEFAULT '10' COMMENT 'Sets the percentage of the non trade White auction items',
-  `percentgreenitems` int(11) DEFAULT '30' COMMENT 'Sets the percentage of the non trade Green auction items',
-  `percentblueitems` int(11) DEFAULT '8' COMMENT 'Sets the percentage of the non trade Blue auction items',
-  `percentpurpleitems` int(11) DEFAULT '2' COMMENT 'Sets the percentage of the non trade Purple auction items',
-  `percentorangeitems` int(11) DEFAULT '0' COMMENT 'Sets the percentage of the non trade Orange auction items',
-  `percentyellowitems` int(11) DEFAULT '0' COMMENT 'Sets the percentage of the non trade Yellow auction items',
-  `minpricegrey` int(11) DEFAULT '100' COMMENT 'Minimum price of Grey items (percentage).',
-  `maxpricegrey` int(11) DEFAULT '150' COMMENT 'Maximum price of Grey items (percentage).',
-  `minpricewhite` int(11) DEFAULT '150' COMMENT 'Minimum price of White items (percentage).',
-  `maxpricewhite` int(11) DEFAULT '250' COMMENT 'Maximum price of White items (percentage).',
-  `minpricegreen` int(11) DEFAULT '800' COMMENT 'Minimum price of Green items (percentage).',
-  `maxpricegreen` int(11) DEFAULT '1400' COMMENT 'Maximum price of Green items (percentage).',
-  `minpriceblue` int(11) DEFAULT '1250' COMMENT 'Minimum price of Blue items (percentage).',
-  `maxpriceblue` int(11) DEFAULT '1750' COMMENT 'Maximum price of Blue items (percentage).',
-  `minpricepurple` int(11) DEFAULT '2250' COMMENT 'Minimum price of Purple items (percentage).',
-  `maxpricepurple` int(11) DEFAULT '4550' COMMENT 'Maximum price of Purple items (percentage).',
-  `minpriceorange` int(11) DEFAULT '3250' COMMENT 'Minimum price of Orange items (percentage).',
-  `maxpriceorange` int(11) DEFAULT '5550' COMMENT 'Maximum price of Orange items (percentage).',
-  `minpriceyellow` int(11) DEFAULT '5250' COMMENT 'Minimum price of Yellow items (percentage).',
-  `maxpriceyellow` int(11) DEFAULT '6550' COMMENT 'Maximum price of Yellow items (percentage).',
-  `minbidpricegrey` int(11) DEFAULT '70' COMMENT 'Starting bid price of Grey items as a percentage of the randomly chosen buyout price. Default: 70',
-  `maxbidpricegrey` int(11) DEFAULT '100' COMMENT 'Starting bid price of Grey items as a percentage of the randomly chosen buyout price. Default: 100',
-  `minbidpricewhite` int(11) DEFAULT '70' COMMENT 'Starting bid price of White items as a percentage of the randomly chosen buyout price. Default: 70',
-  `maxbidpricewhite` int(11) DEFAULT '100' COMMENT 'Starting bid price of White items as a percentage of the randomly chosen buyout price. Default: 100',
-  `minbidpricegreen` int(11) DEFAULT '80' COMMENT 'Starting bid price of Green items as a percentage of the randomly chosen buyout price. Default: 80',
-  `maxbidpricegreen` int(11) DEFAULT '100' COMMENT 'Starting bid price of Green items as a percentage of the randomly chosen buyout price. Default: 100',
-  `minbidpriceblue` int(11) DEFAULT '75' COMMENT 'Starting bid price of Blue items as a percentage of the randomly chosen buyout price. Default: 75',
-  `maxbidpriceblue` int(11) DEFAULT '100' COMMENT 'Starting bid price of Blue items as a percentage of the randomly chosen buyout price. Default: 100',
-  `minbidpricepurple` int(11) DEFAULT '80' COMMENT 'Starting bid price of Purple items as a percentage of the randomly chosen buyout price. Default: 80',
-  `maxbidpricepurple` int(11) DEFAULT '100' COMMENT 'Starting bid price of Purple items as a percentage of the randomly chosen buyout price. Default: 100',
-  `minbidpriceorange` int(11) DEFAULT '80' COMMENT 'Starting bid price of Orange items as a percentage of the randomly chosen buyout price. Default: 80',
-  `maxbidpriceorange` int(11) DEFAULT '100' COMMENT 'Starting bid price of Orange items as a percentage of the randomly chosen buyout price. Default: 100',
-  `minbidpriceyellow` int(11) DEFAULT '80' COMMENT 'Starting bid price of Yellow items as a percentage of the randomly chosen buyout price. Default: 80',
-  `maxbidpriceyellow` int(11) DEFAULT '100' COMMENT 'Starting bid price of Yellow items as a percentage of the randomly chosen buyout price. Default: 100',
-  `maxstackgrey` int(11) DEFAULT '0' COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
-  `maxstackwhite` int(11) DEFAULT '0' COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
-  `maxstackgreen` int(11) DEFAULT '0' COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
-  `maxstackblue` int(11) DEFAULT '0' COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
-  `maxstackpurple` int(11) DEFAULT '0' COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
-  `maxstackorange` int(11) DEFAULT '0' COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
-  `maxstackyellow` int(11) DEFAULT '0' COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
-  `buyerpricegrey` int(11) DEFAULT '1' COMMENT 'Multiplier to vendorprice when buying grey items from auctionhouse',
-  `buyerpricewhite` int(11) DEFAULT '3' COMMENT 'Multiplier to vendorprice when buying white items from auctionhouse',
-  `buyerpricegreen` int(11) DEFAULT '5' COMMENT 'Multiplier to vendorprice when buying green items from auctionhouse',
-  `buyerpriceblue` int(11) DEFAULT '12' COMMENT 'Multiplier to vendorprice when buying blue items from auctionhouse',
-  `buyerpricepurple` int(11) DEFAULT '15' COMMENT 'Multiplier to vendorprice when buying purple items from auctionhouse',
-  `buyerpriceorange` int(11) DEFAULT '20' COMMENT 'Multiplier to vendorprice when buying orange items from auctionhouse',
-  `buyerpriceyellow` int(11) DEFAULT '22' COMMENT 'Multiplier to vendorprice when buying yellow items from auctionhouse',
-  `buyerbiddinginterval` int(11) DEFAULT '1' COMMENT 'Interval how frequently AHB bids on each AH. Time in minutes',
-  `buyerbidsperinterval` int(11) DEFAULT '1' COMMENT 'number of bids to put in per bidding interval',
-  PRIMARY KEY (`auctionhouse`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+CREATE TABLE `mod_auctionhousebot`  (
+  `auctionhouse` int NOT NULL DEFAULT 0 COMMENT 'mapID of the auctionhouse.',
+  `name` char(25) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL COMMENT 'Text name of the auctionhouse.',
+  `minpricegrey` int NULL DEFAULT 100 COMMENT 'Minimum price of Grey items (percentage).',
+  `maxpricegrey` int NULL DEFAULT 150 COMMENT 'Maximum price of Grey items (percentage).',
+  `minpricewhite` int NULL DEFAULT 150 COMMENT 'Minimum price of White items (percentage).',
+  `maxpricewhite` int NULL DEFAULT 250 COMMENT 'Maximum price of White items (percentage).',
+  `minpricegreen` int NULL DEFAULT 800 COMMENT 'Minimum price of Green items (percentage).',
+  `maxpricegreen` int NULL DEFAULT 1400 COMMENT 'Maximum price of Green items (percentage).',
+  `minpriceblue` int NULL DEFAULT 1250 COMMENT 'Minimum price of Blue items (percentage).',
+  `maxpriceblue` int NULL DEFAULT 1750 COMMENT 'Maximum price of Blue items (percentage).',
+  `minpricepurple` int NULL DEFAULT 2250 COMMENT 'Minimum price of Purple items (percentage).',
+  `maxpricepurple` int NULL DEFAULT 4550 COMMENT 'Maximum price of Purple items (percentage).',
+  `minpriceorange` int NULL DEFAULT 3250 COMMENT 'Minimum price of Orange items (percentage).',
+  `maxpriceorange` int NULL DEFAULT 5550 COMMENT 'Maximum price of Orange items (percentage).',
+  `minpriceyellow` int NULL DEFAULT 5250 COMMENT 'Minimum price of Yellow items (percentage).',
+  `maxpriceyellow` int NULL DEFAULT 6550 COMMENT 'Maximum price of Yellow items (percentage).',
+  `maxstackgrey` int NULL DEFAULT 0 COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
+  `maxstackwhite` int NULL DEFAULT 0 COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
+  `maxstackgreen` int NULL DEFAULT 0 COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
+  `maxstackblue` int NULL DEFAULT 0 COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
+  `maxstackpurple` int NULL DEFAULT 0 COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
+  `maxstackorange` int NULL DEFAULT 0 COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
+  `maxstackyellow` int NULL DEFAULT 0 COMMENT 'Stack size limits for item qualities - a value of 0 will disable a maximum stack size for that quality, which will allow the bot to create items in stack as large as the item allows.',
+  `buyerpricegrey` int NULL DEFAULT 1 COMMENT 'Multiplier to vendorprice when buying grey items from auctionhouse',
+  `buyerpricewhite` int NULL DEFAULT 3 COMMENT 'Multiplier to vendorprice when buying white items from auctionhouse',
+  `buyerpricegreen` int NULL DEFAULT 5 COMMENT 'Multiplier to vendorprice when buying green items from auctionhouse',
+  `buyerpriceblue` int NULL DEFAULT 12 COMMENT 'Multiplier to vendorprice when buying blue items from auctionhouse',
+  `buyerpricepurple` int NULL DEFAULT 15 COMMENT 'Multiplier to vendorprice when buying purple items from auctionhouse',
+  `buyerpriceorange` int NULL DEFAULT 20 COMMENT 'Multiplier to vendorprice when buying orange items from auctionhouse',
+  `buyerpriceyellow` int NULL DEFAULT 22 COMMENT 'Multiplier to vendorprice when buying yellow items from auctionhouse',
+  `buyerbiddinginterval` int NULL DEFAULT 1 COMMENT 'Interval how frequently AHB bids on each AH. Time in minutes',
+  `buyerbidsperinterval` int NULL DEFAULT 1 COMMENT 'number of bids to put in per bidding interval',
+  PRIMARY KEY (`auctionhouse`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_general_ci ROW_FORMAT = Fixed;
 
-DROP TABLE IF EXISTS `mod_auctionhousebot_disabled_items`;
-CREATE TABLE `mod_auctionhousebot_disabled_items` (
-  `item` mediumint(8) unsigned NOT NULL,
-  PRIMARY KEY (`item`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+-- ----------------------------
+-- Records of mod_auctionhousebot
+-- ----------------------------
+INSERT INTO `mod_auctionhousebot` VALUES (2, 'Alliance', 100, 150, 150, 200, 300, 600, 400, 800, 1000, 2000, 3250, 5550, 5250, 6550, 0, 0, 3, 2, 1, 1, 1, 1, 3, 5, 12, 15, 20, 22, 1, 1);
+INSERT INTO `mod_auctionhousebot` VALUES (6, 'Horde', 100, 150, 150, 200, 300, 600, 400, 800, 1000, 2000, 3250, 5550, 5250, 6550, 0, 0, 3, 2, 1, 1, 1, 1, 3, 5, 12, 15, 20, 22, 1, 1);
+INSERT INTO `mod_auctionhousebot` VALUES (7, 'Neutral', 100, 150, 150, 200, 300, 600, 400, 800, 1000, 2000, 3250, 5550, 5250, 6550, 0, 0, 3, 2, 1, 1, 1, 1, 3, 5, 12, 15, 20, 22, 1, 1);
 
--- AHBot auctionhouse configuration
-INSERT INTO `mod_auctionhousebot` (`auctionhouse`, `name`, `minitems`, `maxitems`, `percentgreytradegoods`, `percentwhitetradegoods`, `percentgreentradegoods`, `percentbluetradegoods`, `percentpurpletradegoods`, `percentorangetradegoods`, `percentyellowtradegoods`, `percentgreyitems`, `percentwhiteitems`, `percentgreenitems`, `percentblueitems`, `percentpurpleitems`, `percentorangeitems`, `percentyellowitems`, `minpricegrey`, `maxpricegrey`, `minpricewhite`, `maxpricewhite`, `minpricegreen`, `maxpricegreen`, `minpriceblue`, `maxpriceblue`, `minpricepurple`, `maxpricepurple`, `minpriceorange`, `maxpriceorange`, `minpriceyellow`, `maxpriceyellow`, `minbidpricegrey`, `maxbidpricegrey`, `minbidpricewhite`, `maxbidpricewhite`, `minbidpricegreen`, `maxbidpricegreen`, `minbidpriceblue`, `maxbidpriceblue`, `minbidpricepurple`, `maxbidpricepurple`, `minbidpriceorange`, `maxbidpriceorange`, `minbidpriceyellow`, `maxbidpriceyellow`, `maxstackgrey`, `maxstackwhite`, `maxstackgreen`, `maxstackblue`, `maxstackpurple`, `maxstackorange`, `maxstackyellow`, `buyerpricegrey`, `buyerpricewhite`, `buyerpricegreen`, `buyerpriceblue`, `buyerpricepurple`, `buyerpriceorange`, `buyerpriceyellow`, `buyerbiddinginterval`, `buyerbidsperinterval`)
-VALUES
-(2,'Alliance',250,250,0,27,12,10,1,0,0,0,10,30,8,2,0,0,100,150,150,250,800,1400,1250,1750,2250,4550,3250,5550,5250,6550,70,100,70,100,80,100,75,100,80,100,80,100,80,100,0,0,3,2,1,1,1,1,3,5,12,15,20,22,1,1),
-(6,'Horde',250,250,0,27,12,10,1,0,0,0,10,30,8,2,0,0,100,150,150,250,800,1400,1250,1750,2250,4550,3250,5550,5250,6550,70,100,70,100,80,100,75,100,80,100,80,100,80,100,0,0,3,2,1,1,1,1,3,5,12,15,20,22,1,1),
-(7,'Neutral',250,250,0,27,12,10,1,0,0,0,10,30,8,2,0,0,100,150,150,250,800,1400,1250,1750,2250,4550,3250,5550,5250,6550,70,100,70,100,80,100,75,100,80,100,80,100,80,100,0,0,3,2,1,1,1,1,3,5,12,15,20,22,1,1);
+SET FOREIGN_KEY_CHECKS = 1;
 
 -- Items unavailable to players
 INSERT INTO `mod_auctionhousebot_disabled_items`
@@ -366,3 +433,4 @@ VALUES
 (53890), (54069), (54860), (50840), (53891), (53924), (51997), (51998), (54847), (54857), (56806), (54212), (54452), (54810), (50093), (54822),
 (50289), (50301), (50307), (52189), (52202), (52272), (52275), (52276), (52345), (52562), (52563), (52565), (52729), (53510), (54218), (54455),
 (54467), (50248), (50431), (52011), (52062), (54291), (54470);
+
