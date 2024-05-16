@@ -749,9 +749,9 @@ void AuctionHouseBot::InitializeConfiguration()
     AHBplayerGUID = sConfigMgr->GetOption<uint32>("AuctionHouseBot.GUID", 0);
     ItemsPerCycle = sConfigMgr->GetOption<uint32>("AuctionHouseBot.ItemsPerCycle", 200);
 
-    EnableAuctionsAlliance = sConfigMgr->GetOption<bool>("AuctionHouseBot.Alliance", true);
-    EnableAuctionsHorde = sConfigMgr->GetOption<bool>("AuctionHouseBot.Horde", true);
-    EnableAuctionsNeutral = sConfigMgr->GetOption<bool>("AuctionHouseBot.Neutral", false);
+    EnableAuctionsAlliance = sConfigMgr->GetOption<bool>("AuctionHouseBot.EnableAuctionsAlliance", true);
+    EnableAuctionsHorde = sConfigMgr->GetOption<bool>("AuctionHouseBot.EnableAuctionsAlliance", true);
+    EnableAuctionsNeutral = sConfigMgr->GetOption<bool>("AuctionHouseBot.EnableAuctionsAlliance", false);
     //Begin Filters
 
     Vendor_Items = sConfigMgr->GetOption<bool>("AuctionHouseBot.VendorItems", false);
