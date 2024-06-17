@@ -33,9 +33,9 @@ using namespace std;
 vector<uint32> npcItems;
 vector<uint32> lootItems;
 
-std::map<uint32, std::vector<uint32>> g_mapCategoryItems;
+std::map<uint32, std::vector<uint32>> g_mapCategoryItems;   // all item's id sorted by class and subclass
 
-std::map<uint32, AHConfigCategory> g_configs;
+std::map<uint32, AHConfigCategory> g_configs;   // all configs of items need to be added sorted by class and subclass 
 
 AuctionHouseBot::AuctionHouseBot():AllianceConfig(2),HordeConfig(6),NeutralConfig(7)
 {
@@ -116,48 +116,52 @@ void AuctionHouseBot::addNewAuctions(Player *AHBplayer, AHBConfig *config)
         return;
     }
 
-    uint32 auctions = auctionHouse->Getcount();
+    // Caculate the number of auctions bot added and the number of items by class&subclass.
+    uint32 auctions = 0;
+    std::map<uint32, uint32> RealItemCounts;
+    for (auto itr = auctionHouse->GetAuctionsBegin(); itr != auctionHouse->GetAuctionsEnd(); itr++)
+    {
+        if (itr->second->owner.GetCounter() != AHBplayerGUID)
+            continue;
+
+        auctions++;
+        auto * proto = sObjectMgr->GetItemTemplate(itr->second->item_template);
+        uint32 key = GET_INDEX(proto->Class, proto->SubClass);
+        RealItemCounts[key]++;
+    }
     if (auctions >= m_nConfigCounts)
     {
         LOG_TRACE("module", "AHSeller: Auctions above minimum");
         return;
     }
 
-    uint32 items = 0;
+    uint32 needToAdd = 0;
     if ((m_nConfigCounts - auctions) >= ItemsPerCycle)
-        items = ItemsPerCycle;
+        needToAdd = ItemsPerCycle;
     else
-        items = (m_nConfigCounts - auctions);
+        needToAdd = (m_nConfigCounts - auctions);
 
-    LOG_DEBUG("module", "AHSeller: Start Adding {} Auctions, house id:", items, config->GetAHID());
-
-    auto mapCount = config->GetItemCountsMap();
+    LOG_DEBUG("module", "AHSeller: Start Adding {} Auctions, house id:", needToAdd, config->GetAHID());
 
     // only insert a few at a time, so as not to peg the processor
-    for (uint32 cnt = 1; cnt <= items; cnt++)
+    uint32 added = 1;
+    // All items need to be added is configured by g_configs
+    for (auto & pair : g_configs)
     {
-        LOG_DEBUG("module", "AHSeller: {} count", cnt);
+        if (added > needToAdd) break;
+        if (pair.second.Count <= RealItemCounts[pair.first]) continue;
 
-        uint32 itemID = 0;
+        const auto & items = g_mapCategoryItems[pair.first];
+        if (items.size()==0) continue;  // never happened
 
-        for (auto & pair : mapCount){
+        LOG_DEBUG("module", "AHSeller: {} count", added);
 
-            if (pair.second >= g_configs[pair.first].Count) continue;
+        uint32 itemID = items[urand(0, items.size() - 1)];
 
-            const auto & items = g_mapCategoryItems[pair.first];
-            if (items.size()==0) continue;
+        RealItemCounts[pair.first]++;
+        added++;
 
-            itemID = items[urand(0, items.size() - 1)];
-
-            pair.second++;
-            break;
-        }
-
-        if (itemID == 0)
-        {
-            LOG_WARN("module", "AHSeller: ItemID is 0");
-            return;
-        }
+        ASSERT (itemID != 0);
 
         ItemTemplate const* prototype = sObjectMgr->GetItemTemplate(itemID);
         if (prototype == NULL)
@@ -536,12 +540,6 @@ void AuctionHouseBot::Initialize()
             LOG_ERROR("module", "AuctionHouseBot: Could not load configuration from database");
             return;
         }
-        // init auction house config count.
-        for (const auto & item : g_configs){
-            AllianceConfig.InitItemCounts(item.first, 0);
-            HordeConfig.InitItemCounts(item.first, 0);
-            NeutralConfig.InitItemCounts(item.first, 0);
-        }
 
         LoadNpcItemFromDB();
 
@@ -750,8 +748,8 @@ void AuctionHouseBot::InitializeConfiguration()
     ItemsPerCycle = sConfigMgr->GetOption<uint32>("AuctionHouseBot.ItemsPerCycle", 200);
 
     EnableAuctionsAlliance = sConfigMgr->GetOption<bool>("AuctionHouseBot.EnableAuctionsAlliance", true);
-    EnableAuctionsHorde = sConfigMgr->GetOption<bool>("AuctionHouseBot.EnableAuctionsAlliance", true);
-    EnableAuctionsNeutral = sConfigMgr->GetOption<bool>("AuctionHouseBot.EnableAuctionsAlliance", false);
+    EnableAuctionsHorde = sConfigMgr->GetOption<bool>("AuctionHouseBot.EnableAuctionsHorde", true);
+    EnableAuctionsNeutral = sConfigMgr->GetOption<bool>("AuctionHouseBot.EnableAuctionsNeutral", false);
     //Begin Filters
 
     Vendor_Items = sConfigMgr->GetOption<bool>("AuctionHouseBot.VendorItems", false);
@@ -786,89 +784,6 @@ void AuctionHouseBot::InitializeConfiguration()
     DisableItemsAboveGUID = sConfigMgr->GetOption<uint32>("AuctionHouseBot.DisableItemsAboveGUID", 0);
     DisableTGsBelowGUID = sConfigMgr->GetOption<uint32>("AuctionHouseBot.DisableTGsBelowGUID", 0);
     DisableTGsAboveGUID = sConfigMgr->GetOption<uint32>("AuctionHouseBot.DisableTGsAboveGUID", 0);
-}
-
-void AuctionHouseBot::IncrementItemCounts(AuctionEntry* ah)
-{
-    // from auctionhousehandler.cpp, creates auction pointer & player pointer
-
-    // get exact item information
-    Item *pItem =  sAuctionMgr->GetAItem(ah->item_guid);
-    if (!pItem)
-    {
-		if (debug_Out)
-            LOG_ERROR("module", "AHBot: Item {} doesn't exist, perhaps bought already?", ah->item_guid.ToString());
-        return;
-    }
-
-    // get item prototype
-    ItemTemplate const* prototype = sObjectMgr->GetItemTemplate(ah->item_template);
-
-    AHBConfig *config;
-
-    AuctionHouseEntry const* ahEntry = sAuctionHouseStore.LookupEntry(ah->GetHouseId());
-    if (!ahEntry)
-    {
-        if (debug_Out)
-            LOG_ERROR("module", "AHBot: {} returned as House Faction. Neutral", ah->GetHouseId());
-        config = &NeutralConfig;
-    }
-    else if (ahEntry->houseId == AUCTIONHOUSE_ALLIANCE)
-    {
-        if (debug_Out)
-            LOG_ERROR("module", "AHBot: {} returned as House Faction. Alliance", ah->GetHouseId());
-        config = &AllianceConfig;
-    }
-    else if (ahEntry->houseId == AUCTIONHOUSE_HORDE)
-    {
-        if (debug_Out)
-            LOG_ERROR("module", "AHBot: {} returned as House Faction. Horde", ah->GetHouseId());
-        config = &HordeConfig;
-    }
-    else
-    {
-        if (debug_Out)
-            LOG_ERROR("module", "AHBot: {} returned as House Faction. Neutral", ah->GetHouseId());
-        config = &NeutralConfig;
-    }
-
-    config->IncItemCounts(prototype->Class, prototype->SubClass, prototype->Quality);
-}
-
-void AuctionHouseBot::DecrementItemCounts(AuctionEntry* ah, uint32 itemEntry)
-{
-    // get item prototype
-    ItemTemplate const* prototype = sObjectMgr->GetItemTemplate(itemEntry);
-
-    AHBConfig *config;
-
-    AuctionHouseEntry const* ahEntry = sAuctionHouseStore.LookupEntry(ah->GetHouseId());
-    if (!ahEntry)
-    {
-        if (debug_Out)
-            LOG_ERROR("module", "AHBot: {} returned as House Faction. Neutral", ah->GetHouseId());
-        config = &NeutralConfig;
-    }
-    else if (ahEntry->houseId == AUCTIONHOUSE_ALLIANCE)
-    {
-        if (debug_Out)
-            LOG_ERROR("module", "AHBot: {} returned as House Faction. Alliance", ah->GetHouseId());
-        config = &AllianceConfig;
-    }
-    else if (ahEntry->houseId == AUCTIONHOUSE_HORDE)
-    {
-        if (debug_Out)
-            LOG_ERROR("module", "AHBot: {} returned as House Faction. Horde", ah->GetHouseId());
-        config = &HordeConfig;
-    }
-    else
-    {
-        if (debug_Out)
-            LOG_ERROR("module", "AHBot: {} returned as House Faction. Neutral", ah->GetHouseId());
-        config = &NeutralConfig;
-    }
-
-    config->DecItemCounts(prototype->Class, prototype->SubClass, prototype->Quality);
 }
 
 void AuctionHouseBot::Commands(AHBotCommand command, uint32 ahMapID, uint32 col, char* args)
@@ -1042,35 +957,6 @@ void AuctionHouseBot::LoadValues(AHBConfig *config)
             LOG_ERROR("module", "maxStackPurple          = {}", config->GetMaxStack(AHB_PURPLE));
             LOG_ERROR("module", "maxStackOrange          = {}", config->GetMaxStack(AHB_ORANGE));
             LOG_ERROR("module", "maxStackYellow          = {}", config->GetMaxStack(AHB_YELLOW));
-        }
-
-        //AuctionHouseEntry const* ahEntry =  sAuctionMgr->GetAuctionHouseEntry(config->GetAHFID());
-        AuctionHouseObject* auctionHouse =  sAuctionMgr->GetAuctionsMap(config->GetAHFID());
-
-        config->ResetItemCounts();
-        uint32 auctions = auctionHouse->Getcount();
-
-        if (auctions)
-        {
-            for (AuctionHouseObject::AuctionEntryMap::const_iterator itr = auctionHouse->GetAuctionsBegin(); itr != auctionHouse->GetAuctionsEnd(); ++itr)
-            {
-                AuctionEntry *Aentry = itr->second;
-				Item *item = sAuctionMgr->GetAItem(Aentry->item_guid);
-                if (item)
-                {
-                    ItemTemplate const *prototype = item->GetTemplate();
-                    if (prototype)
-                    {
-                        if (config->AddItemCountsMap(prototype->Class, prototype->SubClass)) 
-                            continue;
-                    }
-                }
-            }
-        }
-
-        if (debug_Out)
-        {
-			LOG_ERROR("module", "Current Settings for {} Auctionhouses:", WorldDatabase.Query("SELECT name FROM mod_auctionhousebot WHERE auctionhouse = {}", config->GetAHID())->Fetch()->Get<std::string>());
         }
     }
     if (AHBBuyer)

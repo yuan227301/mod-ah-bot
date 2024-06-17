@@ -133,8 +133,6 @@ public:
     bool LoadConfigFromDB();
     bool LoadNpcItemFromDB();
     bool LoadLootItemFromDB();
-    void DecrementItemCounts(AuctionEntry* ah, uint32 itemEntry);
-    void IncrementItemCounts(AuctionEntry* ah);
     void Commands(AHBotCommand, uint32, uint32, char*);
     ObjectGuid::LowType GetAHBplayerGUID() { return AHBplayerGUID; };
 

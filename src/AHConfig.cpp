@@ -1,32 +1,5 @@
 #include "AHConfig.h"
 
-
-bool AHBConfig::AddItemCountsMap(uint32 Class, uint32 subClass){
-    auto it = m_mItemCounts.find(GET_INDEX(Class, subClass));
-    if(it != m_mItemCounts.end()){
-        it->second += 1;
-        return true;
-    }
-
-    return false;
-}
-
-void AHBConfig::DecItemCounts(uint32 Class, uint32 subClass, uint32 Quality)
-{
-    auto it = m_mItemCounts.find(GET_INDEX(Class, subClass));
-    if (it != m_mItemCounts.end())
-    {
-        it->second -= 1;
-        return;
-    }
-}
-
-void AHBConfig::ResetItemCounts(){
-    for (auto& it : m_mItemCounts) {
-        it.second = 0;
-    }
-}
-
 AHBConfig::AHBConfig(uint32 ahid)
 {
     AHID = ahid;
@@ -46,10 +19,6 @@ AHBConfig::AHBConfig(uint32 ahid)
         break;
     }
 
-}
-
-void AHBConfig::InitItemCounts(uint32 key, uint32 value){
-    m_mItemCounts[key] = value;
 }
 
 void AHBConfig::SetMinPrice(uint32 color, uint32 value)

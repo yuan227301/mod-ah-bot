@@ -102,8 +102,6 @@ private:
 public:
     AHBConfig(uint32 ahid);
 
-    void InitItemCounts(uint32 key, uint32 value);
-
     uint32 GetAHID(){ return AHID; }
     uint32 GetAHFID(){ return AHFID; }
     
@@ -127,15 +125,6 @@ public:
         return buyerBiddingInterval;
     }
 
-    void DecItemCounts(uint32 Class, uint32 subClass, uint32 Quality);
-
-    void IncItemCounts(uint32 Class, uint32 subClass, uint32 Quality)
-    {
-        AddItemCountsMap(Class, subClass);
-    }
-
-    void ResetItemCounts();
-
     void SetBidsPerInterval(uint32 value)
     {
         buyerBidsPerInterval = value;
@@ -144,9 +133,6 @@ public:
     {
         return buyerBidsPerInterval;
     }
-
-    std::map<uint32, uint32> GetItemCountsMap(){ return m_mItemCounts; }
-    bool AddItemCountsMap(uint32 Class, uint32 subClass);
 
     ~AHBConfig(){}
 };
